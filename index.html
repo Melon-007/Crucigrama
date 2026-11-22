@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crucigrama: Manejo de buses y estándares</title>
+<style>
+:root { color-scheme: light; --ink:#172033; --blue:#2457a7; --pale:#eaf1fb; --line:#b9c5d6; }
+* { box-sizing:border-box; }
+body { margin:0; font-family:Arial,Helvetica,sans-serif; background:#f4f6fa; color:var(--ink); }
+main { max-width:1100px; margin:0 auto; padding:28px 18px 50px; }
+header { text-align:center; margin-bottom:22px; }
+h1 { margin:0 0 8px; font-size:clamp(1.5rem,4vw,2.2rem); }
+header p { margin:0; color:#526078; }
+.layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr); gap:24px; align-items:start; }
+.panel { background:white; border:1px solid #e0e5ed; border-radius:14px; padding:18px; box-shadow:0 4px 16px #1720330a; }
+.grid-wrap { overflow:auto; padding:5px 0 12px; }
+#grid { display:grid; grid-template-columns:repeat(21, minmax(27px, 34px)); grid-template-rows:repeat(11, minmax(27px, 34px)); width:max-content; margin:auto; }
+.cell { position:relative; width:34px; height:34px; border:1px solid #8292a8; background:white; }
+.cell.black { background:#172033; border-color:#172033; }
+.cell input { width:100%; height:100%; border:0; outline:0; text-align:center; text-transform:uppercase; font-size:17px; font-weight:700; color:#172033; background:transparent; padding:0; }
+.cell input:focus { background:#eaf1fb; box-shadow:inset 0 0 0 2px var(--blue); }
+.num { position:absolute; top:1px; left:2px; font-size:9px; line-height:1; color:#526078; pointer-events:none; }
+.clues h2 { margin:0 0 10px; font-size:1.1rem; }
+.clues ol { margin:0 0 20px; padding-left:26px; }
+.clues li { padding:4px 0 7px; line-height:1.35; }
+.actions { display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+button { border:0; border-radius:8px; padding:11px 15px; font-weight:700; cursor:pointer; }
+.primary { background:var(--blue); color:white; }
+.secondary { background:var(--pale); color:var(--blue); }
+#status { min-height:24px; margin:12px 0 0; font-weight:700; }
+.note { font-size:.9rem; color:#647089; margin-top:10px; }
+@media(max-width:760px) { .layout { grid-template-columns:1fr; } .panel { padding:14px; } }
+</style>
+</head>
+<body>
+<main>
+<header>
+<h1>Crucigrama: Manejo de buses y estándares</h1>
+<p>Completa las 14 palabras. Escribe una letra en cada casilla.</p>
+</header>
+<div class="layout">
+<section class="panel">
+<div class="grid-wrap"><div id="grid" aria-label="Cuadrícula del crucigrama"></div></div>
+<div class="actions">
+<button class="primary" id="check">Comprobar respuestas</button>
+<button class="secondary" id="clear">Borrar todo</button>
+<button class="secondary" id="reveal">Mostrar solución</button>
+</div>
+<p id="status" role="status"></p>
+<p class="note">Consejo: puedes usar las pistas horizontales y verticales. No necesitas escribir acentos.</p>
+</section>
+<section class="panel clues">
+<h2>Horizontales</h2><ol id="across"></ol>
+<h2>Verticales</h2><ol id="down"></ol>
+</section>
+</div>
+</main>
+<script>
+const puzzle = {"rows": 11, "cols": 21, "placements": [{"word": "DIRECCIONES", "r": 3, "c": 0, "dir": "across", "num": 8}, {"word": "CAN", "r": 3, "c": 4, "dir": "down", "num": 9}, {"word": "SPI", "r": 3, "c": 10, "dir": "down", "num": 10}, {"word": "ARBITRAJE", "r": 5, "c": 7, "dir": "across", "num": 11}, {"word": "CONTROL", "r": 1, "c": 8, "dir": "down", "num": 5}, {"word": "SERIAL", "r": 0, "c": 1, "dir": "down", "num": 2}, {"word": "PCI", "r": 1, "c": 7, "dir": "across", "num": 4}, {"word": "MAESTRO", "r": 0, "c": 12, "dir": "down", "num": 3}, {"word": "PARALELO", "r": 7, "c": 2, "dir": "across", "num": 14}, {"word": "RELOJ", "r": 1, "c": 14, "dir": "down", "num": 6}, {"word": "USB", "r": 0, "c": 0, "dir": "across", "num": 1}, {"word": "UART", "r": 6, "c": 5, "dir": "down", "num": 13}, {"word": "DATOS", "r": 6, "c": 3, "dir": "down", "num": 12}, {"word": "ESCLAVO", "r": 2, "c": 14, "dir": "across", "num": 7}], "clues": {"PARALELO": "Tipo de bus que envía varios bits al mismo tiempo por varias líneas.", "UART": "Módulo de comunicación serial asíncrona con bits de inicio y de parada.", "USB": "Estándar de bus serial universal para conectar teclados, memorias y otros periféricos.", "MAESTRO": "Dispositivo que inicia la comunicación y genera el reloj en buses como SPI.", "PCI": "Estándar de bus de expansión para conectar tarjetas a la tarjeta madre.", "ARBITRAJE": "Proceso que decide qué dispositivo toma el bus cuando varios lo solicitan al mismo tiempo.", "RELOJ": "Señal que sincroniza la transferencia de datos en los buses síncronos.", "ESCLAVO": "Dispositivo que responde a las órdenes del maestro en el bus.", "SPI": "Bus serial síncrono con líneas MOSI, MISO, SCK y SS.", "SERIAL": "Tipo de bus que envía los bits uno tras otro por una sola línea.", "CONTROL": "Bus con señales de lectura, escritura y sincronía que coordinan las operaciones.", "CAN": "Bus serial muy usado en automóviles para comunicar unidades electrónicas.", "DATOS": "Bus bidireccional por el que viaja la información que se lee o se escribe.", "DIRECCIONES": "Bus que lleva la ubicación de memoria o del dispositivo al que accede la CPU."}};
+const gridEl = document.getElementById('grid');
+const cells = Array.from({length:puzzle.rows},()=>Array(puzzle.cols).fill(null));
+const solution = Array.from({length:puzzle.rows},()=>Array(puzzle.cols).fill(null));
+const starts = {};
+for (const p of puzzle.placements) {
+  starts[p.r+','+p.c]=p.num;
+  for(let i=0;i<p.word.length;i++) {
+    const r=p.r+(p.dir==='down'?i:0), c=p.c+(p.dir==='across'?i:0);
+    solution[r][c]=p.word[i];
+  }
+}
+for(let r=0;r<puzzle.rows;r++) {
+  for(let c=0;c<puzzle.cols;c++) {
+    const div=document.createElement('div');
+    div.className='cell'+(solution[r][c]===null?' black':'');
+    if(solution[r][c]!==null) {
+      if(starts[r+','+c]) {
+        const num=document.createElement('span'); num.className='num'; num.textContent=starts[r+','+c]; div.appendChild(num);
+      }
+      const input=document.createElement('input');
+      input.maxLength=1; input.autocomplete='off'; input.spellcheck=false;
+      input.setAttribute('aria-label',`Fila ${r+1}, columna ${c+1}`);
+      input.dataset.r=r; input.dataset.c=c;
+      input.addEventListener('input',()=>{input.value=input.value.toUpperCase().replace(/[^A-ZÑ]/g,'').slice(-1);});
+      div.appendChild(input); cells[r][c]=input;
+    }
+    gridEl.appendChild(div);
+  }
+}
+for(const dir of ['across','down']) {
+  const list=document.getElementById(dir);
+  puzzle.placements.filter(p=>p.dir===dir).sort((a,b)=>a.num-b.num).forEach(p=>{
+    const li=document.createElement('li'); li.value=p.num; li.textContent=puzzle.clues[p.word]; list.appendChild(li);
+  });
+}
+document.getElementById('check').addEventListener('click',()=>{
+  let correct=0, total=0;
+  for(const p of puzzle.placements) {
+    let answer='';
+    for(let i=0;i<p.word.length;i++) {
+      const r=p.r+(p.dir==='down'?i:0), c=p.c+(p.dir==='across'?i:0);
+      answer+=(cells[r][c].value||'').toUpperCase();
+    }
+    total++;
+    if(answer===p.word) correct++;
+  }
+  const status=document.getElementById('status');
+  status.textContent=correct===total?'¡Excelente! Completaste el crucigrama.':`Tienes ${correct} de ${total} palabras correctas. Revisa las que faltan.`;
+  status.style.color=correct===total?'#187443':'#a15b00';
+});
+document.getElementById('clear').addEventListener('click',()=>{
+  for(const row of cells) for(const input of row) if(input) input.value='';
+  document.getElementById('status').textContent='';
+});
+document.getElementById('reveal').addEventListener('click',()=>{
+  for(let r=0;r<puzzle.rows;r++) for(let c=0;c<puzzle.cols;c++) if(cells[r][c]) cells[r][c].value=solution[r][c];
+  document.getElementById('status').textContent='Solución mostrada.';
+  document.getElementById('status').style.color='#2457a7';
+});
+</script>
+</body>
+</html>
