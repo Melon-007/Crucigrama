@@ -9,7 +9,20 @@
 * { box-sizing:border-box; }
 body { margin:0; font-family:Arial,Helvetica,sans-serif; background:#f4f6fa; color:var(--ink); }
 main { max-width:1100px; margin:0 auto; padding:28px 18px 50px; }
-header { text-align:center; margin-bottom:22px; }
+header { position:relative; text-align:center; margin-bottom:22px; }
+.author {
+  position:absolute;
+  top:0;
+  right:0;
+  font-size:.85rem;
+  font-weight:700;
+  color:var(--blue);
+  background:var(--pale);
+  padding:6px 12px;
+  border-radius:8px;
+  border:1px solid #c9d6ea;
+  white-space:nowrap;
+}
 h1 { margin:0 0 8px; font-size:clamp(1.5rem,4vw,2.2rem); }
 header p { margin:0; color:#526078; }
 .layout { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr); gap:24px; align-items:start; }
@@ -30,12 +43,17 @@ button { border:0; border-radius:8px; padding:11px 15px; font-weight:700; cursor
 .secondary { background:var(--pale); color:var(--blue); }
 #status { min-height:24px; margin:12px 0 0; font-weight:700; }
 .note { font-size:.9rem; color:#647089; margin-top:10px; }
-@media(max-width:760px) { .layout { grid-template-columns:1fr; } .panel { padding:14px; } }
+@media(max-width:760px) {
+  .layout { grid-template-columns:1fr; }
+  .panel { padding:14px; }
+  .author { position:static; display:inline-block; margin-bottom:10px; }
+}
 </style>
 </head>
 <body>
 <main>
 <header>
+<span class="author">Xeomara Sarahi Perez Jimenez · C22481317</span>
 <h1>Crucigrama: Manejo de buses y estándares</h1>
 <p>Completa las 14 palabras. Escribe una letra en cada casilla.</p>
 </header>
