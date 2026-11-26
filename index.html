@@ -9,11 +9,12 @@
 * { box-sizing:border-box; }
 body { margin:0; font-family:Arial,Helvetica,sans-serif; background:#f4f6fa; color:var(--ink); }
 main { max-width:1100px; margin:0 auto; padding:28px 18px 50px; }
-header { position:relative; text-align:center; margin-bottom:22px; }
+header { text-align:center; margin-bottom:22px; }
 .author {
-  position:absolute;
-  top:0;
-  right:0;
+  display:block;
+  width:fit-content;
+  max-width:100%;
+  margin:22px auto 0;
   font-size:.85rem;
   font-weight:700;
   color:var(--blue);
@@ -21,7 +22,7 @@ header { position:relative; text-align:center; margin-bottom:22px; }
   padding:6px 12px;
   border-radius:8px;
   border:1px solid #c9d6ea;
-  white-space:nowrap;
+  text-align:center;
 }
 h1 { margin:0 0 8px; font-size:clamp(1.5rem,4vw,2.2rem); }
 header p { margin:0; color:#526078; }
@@ -46,14 +47,13 @@ button { border:0; border-radius:8px; padding:11px 15px; font-weight:700; cursor
 @media(max-width:760px) {
   .layout { grid-template-columns:1fr; }
   .panel { padding:14px; }
-  .author { position:static; display:inline-block; margin-bottom:10px; }
+  .author { margin-top:18px; }
 }
 </style>
 </head>
 <body>
 <main>
 <header>
-<span class="author">Xeomara Sarahi Perez Jimenez · C22481317</span>
 <h1>Crucigrama: Manejo de buses y estándares</h1>
 <p>Completa las 14 palabras. Escribe una letra en cada casilla.</p>
 </header>
@@ -73,6 +73,7 @@ button { border:0; border-radius:8px; padding:11px 15px; font-weight:700; cursor
 <h2>Verticales</h2><ol id="down"></ol>
 </section>
 </div>
+<footer class="author">Xeomara Sarahi Perez Jimenez · C22481317</footer>
 </main>
 <script>
 const puzzle = {"rows": 11, "cols": 21, "placements": [{"word": "DIRECCIONES", "r": 3, "c": 0, "dir": "across", "num": 8}, {"word": "CAN", "r": 3, "c": 4, "dir": "down", "num": 9}, {"word": "SPI", "r": 3, "c": 10, "dir": "down", "num": 10}, {"word": "ARBITRAJE", "r": 5, "c": 7, "dir": "across", "num": 11}, {"word": "CONTROL", "r": 1, "c": 8, "dir": "down", "num": 5}, {"word": "SERIAL", "r": 0, "c": 1, "dir": "down", "num": 2}, {"word": "PCI", "r": 1, "c": 7, "dir": "across", "num": 4}, {"word": "MAESTRO", "r": 0, "c": 12, "dir": "down", "num": 3}, {"word": "PARALELO", "r": 7, "c": 2, "dir": "across", "num": 14}, {"word": "RELOJ", "r": 1, "c": 14, "dir": "down", "num": 6}, {"word": "USB", "r": 0, "c": 0, "dir": "across", "num": 1}, {"word": "UART", "r": 6, "c": 5, "dir": "down", "num": 13}, {"word": "DATOS", "r": 6, "c": 3, "dir": "down", "num": 12}, {"word": "ESCLAVO", "r": 2, "c": 14, "dir": "across", "num": 7}], "clues": {"PARALELO": "Tipo de bus que envía varios bits al mismo tiempo por varias líneas.", "UART": "Módulo de comunicación serial asíncrona con bits de inicio y de parada.", "USB": "Estándar de bus serial universal para conectar teclados, memorias y otros periféricos.", "MAESTRO": "Dispositivo que inicia la comunicación y genera el reloj en buses como SPI.", "PCI": "Estándar de bus de expansión para conectar tarjetas a la tarjeta madre.", "ARBITRAJE": "Proceso que decide qué dispositivo toma el bus cuando varios lo solicitan al mismo tiempo.", "RELOJ": "Señal que sincroniza la transferencia de datos en los buses síncronos.", "ESCLAVO": "Dispositivo que responde a las órdenes del maestro en el bus.", "SPI": "Bus serial síncrono con líneas MOSI, MISO, SCK y SS.", "SERIAL": "Tipo de bus que envía los bits uno tras otro por una sola línea.", "CONTROL": "Bus con señales de lectura, escritura y sincronía que coordinan las operaciones.", "CAN": "Bus serial muy usado en automóviles para comunicar unidades electrónicas.", "DATOS": "Bus bidireccional por el que viaja la información que se lee o se escribe.", "DIRECCIONES": "Bus que lleva la ubicación de memoria o del dispositivo al que accede la CPU."}};
